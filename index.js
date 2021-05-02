@@ -12,3 +12,9 @@ const PORT = 3000;
 // server
 
 app.listen(PORT, () => console.log("listen in the port", PORT));
+
+// routes
+app.get("/home", (req, res) => {
+    res.send("Home");
+});
+
