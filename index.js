@@ -52,10 +52,12 @@ const csrfToken = (sessionId) => {
     return token;
 };
 
-const csrf = (req, res) => {
+const csrf = (req, res, next) => {
     const token = req.body.csrf;
     if (!token || !token.get(req.sessionID.has(token))) {
         res.status(422).send("csrf is expired or missing");
+    } else {
+        next();
     }
 };
 // DB
@@ -90,7 +92,7 @@ app.get("/logout", login, (req, res) => {
   res.send("Logged Out");
 });
 
-app.get("/edit", login, (req, res) => { // edit view
+app.get("/edit", login, csrf, (req, res) => { // edit view
     res.render("edit", { token: csrfToken(req.sessionID) });
 });
 
