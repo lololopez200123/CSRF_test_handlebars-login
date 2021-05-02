@@ -44,8 +44,8 @@ const login = (req, res, next) => {
 const users = JSON.parse(fs.readFileSync("db.json"));
 
 // routes
-app.get("/home", (req, res) => {
-    res.send("Home");
+app.get("/home", login, (req, res) => {
+    res.send("Home page", "must be logged in to access");
 });
 
 app.get("/login", (req, res) => {
@@ -59,5 +59,16 @@ app.post("/login", (req, res) => {
     }
     req.session.userId = user.id;
     console.log(req.session);
-    res.send("OK");
+    res.redirect("/home");
+});
+
+app.get("/edit", login, (req, res) => {
+    res.render("edit");
+});
+
+app.post("/edit", login, (req, res) => {
+    const user = users.find(user.id === req.session.userId);
+    user.email = req.body.email;
+    console.log(`User ${user.id} email changed to ${user.email}`);
+    res.send("email changed");
 });
