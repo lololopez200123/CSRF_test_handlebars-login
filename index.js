@@ -32,3 +32,11 @@ app.engine("hbs", handlebars({
     extname: ".hbs",
 }));
 app.set("view engine", "hbs");
+
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+app.get("/login", (req, res) => {
+    console.log(req.body);
+});
