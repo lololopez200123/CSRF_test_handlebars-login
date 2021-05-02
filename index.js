@@ -18,3 +18,6 @@ app.get("/home", (req, res) => {
     res.send("Home");
 });
 
+// DB
+
+const users = JSON.parse(fs.readFileSync("db.json"));
