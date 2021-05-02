@@ -6,6 +6,7 @@ const express = require("express");
 const fs = require("fs");
 const handlebars = require("express-handlebars");
 const session = require("express-session");
+const { v4: uuid } = require("uuid");
 
 // server
 const app = express();
@@ -43,6 +44,13 @@ const login = (req, res, next) => {
 
 const tokens = new Map();
 
+const csrfToken = (sessionId) => {
+    console.log(tokens);
+    const token = uuid();
+    tokens.get(sessionId).add(token);
+    return token;
+};
+
 // DB
 
 const users = JSON.parse(fs.readFileSync("db.json"));
@@ -72,8 +80,8 @@ app.get("/logout", login, (req, res) => {
   res.send("Logged Out");
 });
 
-app.get("/edit", login, (req, res) => {
-    res.render("edit");
+app.get("/edit", login, (req, res) => { // edit view
+    res.render("edit", { token: csrfToken(req.sessionID) });
 });
 
 app.post("/edit", login, (req, res) => {
