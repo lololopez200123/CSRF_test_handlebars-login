@@ -18,6 +18,14 @@ app.get("/home", (req, res) => {
     res.send("Home");
 });
 
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+app.post("/login", (req, res) => {
+    console.log(req.body);
+});
+
 // DB
 
 const users = JSON.parse(fs.readFileSync("db.json"));
@@ -33,10 +41,3 @@ app.engine("hbs", handlebars({
 }));
 app.set("view engine", "hbs");
 
-app.get("/login", (req, res) => {
-    res.render("login");
-});
-
-app.get("/login", (req, res) => {
-    console.log(req.body);
-});
