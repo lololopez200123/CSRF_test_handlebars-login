@@ -21,3 +21,14 @@ app.get("/home", (req, res) => {
 // DB
 
 const users = JSON.parse(fs.readFileSync("db.json"));
+
+// Middlwares
+
+app.use(express.urlencoded({ extended: true }));
+app.set("views", __dirname);
+app.engine("hbs", handlebars({
+    defaultLayout: "main",
+    layoutsDir: __dirname,
+    extname: ".hbs",
+}));
+app.set("view engine", "hbs");
