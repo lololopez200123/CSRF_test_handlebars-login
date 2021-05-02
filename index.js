@@ -45,7 +45,7 @@ const users = JSON.parse(fs.readFileSync("db.json"));
 
 // routes
 app.get("/home", login, (req, res) => {
-    res.send("Home page", "must be logged in to access");
+    res.send("Home page, must be logged in to access");
 });
 
 app.get("/login", (req, res) => {
@@ -62,13 +62,18 @@ app.post("/login", (req, res) => {
     res.redirect("/home");
 });
 
+app.get("/logout", login, (req, res) => {
+  req.session.destroy();
+  res.send("Logged Out");
+});
+
 app.get("/edit", login, (req, res) => {
     res.render("edit");
 });
 
 app.post("/edit", login, (req, res) => {
-    const user = users.find(user.id === req.session.userId);
+    const user = users.find(user => user.id === req.session.userId);
     user.email = req.body.email;
     console.log(`User ${user.id} email changed to ${user.email}`);
-    res.send("email changed");
+    res.send(`email changed to ${user.email}`);
 });
