@@ -39,6 +39,10 @@ const login = (req, res, next) => {
     }
 };
 
+// CSRF TOKENS
+
+const tokens = new Map();
+
 // DB
 
 const users = JSON.parse(fs.readFileSync("db.json"));
@@ -58,6 +62,7 @@ app.post("/login", (req, res) => {
         return res.status(400).send("invalid credentials");
     }
     req.session.userId = user.id;
+    tokens.set(req.sessionID, new Set());
     console.log(req.session);
     res.redirect("/home");
 });
