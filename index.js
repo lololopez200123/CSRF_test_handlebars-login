@@ -45,12 +45,19 @@ const login = (req, res, next) => {
 const tokens = new Map();
 
 const csrfToken = (sessionId) => {
-    console.log(tokens);
     const token = uuid();
     tokens.get(sessionId).add(token);
+    const now = new Date().getTime();
+    setTimeout(() => tokens.get(sessionId).delete(token), 30000);
     return token;
 };
 
+const csrf = (req, res) => {
+    const token = req.body.csrf;
+    if (!token || !token.get(req.sessionID.has(token))) {
+        res.status(422).send("csrf is expired or missing");
+    }
+};
 // DB
 
 const users = JSON.parse(fs.readFileSync("db.json"));
@@ -65,9 +72,12 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+    if (!req.body.email || !req.body.password) {
+        return res.redirect("/login");
+    }
     const user = users.find(user => user.email === req.body.email);
     if (!user || user.password !== req.body.password) {
-        return res.status(400).send("invalid credentials");
+        return res.redirect("/login");
     }
     req.session.userId = user.id;
     tokens.set(req.sessionID, new Set());
