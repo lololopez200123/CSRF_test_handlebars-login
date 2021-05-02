@@ -1,5 +1,6 @@
 <form action="/login" method="POST">
-    <input type="email" name="email" placeholder="Email">
+    <input type="email" name="email" placeholder="Nuevo Email">
     <input type="password" name="password" id="" placeholder="pass">
     <button type="submit" >Enviar</button>
+    <input type="hidden" name"csrf" value="{{token}}">
 </form>
