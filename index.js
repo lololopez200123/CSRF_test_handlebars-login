@@ -54,7 +54,7 @@ const csrfToken = (sessionId) => {
 
 const csrf = (req, res, next) => {
     const token = req.body.csrf;
-    if (!token || !token.get(req.sessionID.has(token))) {
+    if (!token || !tokens.get(req.sessionID).has(token)) {
         res.status(422).send("csrf is expired or missing");
     } else {
         next();
@@ -92,11 +92,11 @@ app.get("/logout", login, (req, res) => {
   res.send("Logged Out");
 });
 
-app.get("/edit", login, csrf, (req, res) => { // edit view
+app.get("/edit", login, (req, res) => { // edit view
     res.render("edit", { token: csrfToken(req.sessionID) });
 });
 
-app.post("/edit", login, (req, res) => {
+app.post("/edit", login, csrf, (req, res) => {
     const user = users.find(user => user.id === req.session.userId);
     user.email = req.body.email;
     console.log(`User ${user.id} email changed to ${user.email}`);

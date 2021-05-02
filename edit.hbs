@@ -1,4 +1,5 @@
 <form action="/edit" method="POST">
     <input type="email" name="email" placeholder="email">
+    <input type="hidden" name="csrf" value="{{token}}">
     <button type="submit">cambiar email</button>
 </form>
